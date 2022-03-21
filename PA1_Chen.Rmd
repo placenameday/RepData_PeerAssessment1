@@ -1,0 +1,59 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+# Chen's first Rmarkdown   
+***
+
+## Loading the essenstial package   
+```{r, package}
+library(tidyverse)
+library(scales)
+```
+   
+## Loading and preprocessing the data
+```{r, load data}
+dt <- read_csv("activity.zip")
+```
+
+## What is mean total number of steps taken per day?
+```{r, steps per day}
+step <- dt %>% group_by(date) %>% summarise(sum = sum(steps, na.rm = TRUE))
+
+p <- ggplot(step, aes(x = date, y=sum)) +
+  geom_col(fill = "pink", colour = "brown", size = .3) +
+  xlab("Date(2012)") +
+  ylab("Total steps per day") +
+  ggtitle("Total Number of Steps Taken per Day") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_date(date_breaks = "1 week",labels=date_format("%m-%d"))
+p
+cat("The Mean of the total number of steps/day is ", mean(step$sum, na.rm = T),".", sep = "")
+cat("The Median of the total number of steps/day is ", median(step$sum, na.rm = T),".", sep = "")
+```
+   
+   
+## What is the average daily activity pattern?
+```{r, daily activity pattern}
+step <- dt %>% group_by(interval) %>%
+  summarise(mean = mean(steps, na.rm = TRUE)) %>%
+  mutate(time = seq(0,1435,5)/60)
+
+p <- ggplot(step,aes(x=time,y=mean)) + geom_line() +
+  scale_x_continuous(breaks=seq(0, 24, 2)) +
+  labs(x = "24 Hours a Day", y = "Average Number of Steps", title ="Average Daily Activity Pattern") +
+  theme(plot.title = element_text(hjust = 0.5))
+p
+
+cat("On average across all the days in the dataset ", step[which.max(step$mean),1][[1]], 
+    " interval contains the maximum number of steps.", sep = "")
+
+```
+
+## Imputing missing values
+
+
+
+## Are there differences in activity patterns between weekdays and weekends?
