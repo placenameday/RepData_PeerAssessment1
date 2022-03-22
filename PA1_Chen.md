@@ -102,13 +102,10 @@ The code below do these things:
 ```r
 step1 <- dt %>% group_by(date) %>% summarise(sum = sum(steps, na.rm = TRUE))
 
-p1 <- ggplot(step1, aes(x = date, y=sum)) +
-  geom_col(fill = "pink", colour = "brown", size = .3) +
-  xlab("Date(2012)") +
-  ylab("Total steps per day") +
-  ggtitle("Total Number of Steps Taken per Day") +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  scale_x_date(date_breaks = "1 week",labels=date_format("%m-%d"))
+p1 <- ggplot(step1, aes(sum)) +
+  geom_histogram(binwidth = 1000,fill="steelblue") +
+  xlab("Total Number of Steps Taken per Day") +
+  ylab("Frequency")
 p1
 ```
 
@@ -185,13 +182,10 @@ dt2$steps <- unlist(map2(dt2$steps, dt2$interval, ~ if(is.na(.x)){step2[which(st
 
 step3 <- dt2 %>% group_by(date) %>% summarise(sum = sum(steps, na.rm = TRUE))
 
-p3 <- ggplot(step3, aes(x = date, y=sum)) +
-  geom_col(fill = "pink", colour = "brown", size = .3) +
-  xlab("Date(2012)") +
-  ylab("Total steps per day") +
-  ggtitle("Total Number of Steps Taken per Day(Missing Data Filled)") +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  scale_x_date(date_breaks = "1 week",labels=date_format("%m-%d"))
+p3 <- ggplot(step3, aes(sum)) +
+  geom_histogram(binwidth = 1000,fill="steelblue") +
+  xlab("Total Number of Steps Taken per Day(Imputing missing values)") +
+  ylab("Frequency")
 
 p1_3 <- ggarrange(p1, p3, labels = c("A", "B"), ncol = 1, nrow = 2)
 p1_3
